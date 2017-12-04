@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Forms Exersice</title>
+</head>
+
+<body>
+  <h1>Register</h1>
+  <form>
+
+    <div class="name">
+      <label for="firstName">First Name: </label>
+      <input type="text" name="firstName" id="firstName" placeholder="John" required=true>
+
+      <label for="lastName">Last Name: </label>
+      <input type="text" name="lastName" id="lastName" placeholder="Smith" required=true>
+    </div>
+
+    <div class="gender">
+      <label for="male">Male </label>
+      <input type="radio" id="male" name="gender" value="male">
+
+      <label for="female">Female </label>
+      <input type="radio" id="femal" name="gender" value="female">
+
+      <label for="other">Other </label>
+      <input type="radio" id="other" name="gender" value="other">
+    </div>
+
+    <div class="emailPassword">
+      <label for="email">Email: </label>
+      <input type="email" name="email" id="email" required=true placeholder="youremail@test.com">
+
+      <label for="password">Password: </label>
+      <input pattern=".{6,10}" title="Password must be 5 to characters" type="password" id="password" required=true>
+    </div>
+
+    <div class="birday">
+      <label for="">Birthday: </label>
+      <select id="month" name="month">
+        <option value="Jan">Jan</option>
+        <option value="Feb">Feb</option>
+        <option value="Mar">Mar</option>
+        <option value="Apr">Apr</option>
+        <option value="May">May</option>
+        <option value="Jun">Jun</option>
+        <option value="Jul">Jul</option>
+        <option value="Aug">Aug</option>
+        <option value="Sep">Sep</option>
+        <option value="Oct">Oct</option>
+        <option value="Nov">Nov</option>
+        <option value="Dec">Dec</option>
+      </select>
+      <select id="day" name="day">
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+        <option value="6">6</option>
+        <option value="7">7</option>
+        <option value="8">8</option>
+        <option value="9">9</option>
+        <option value="10">10</option>
+      </select>
+      <select id="day" name="day">
+        <option value="2017">2017</option>
+        <option value="2016">2016</option>
+        <option value="2015">value</option>
+        <option value="2014">2014</option>
+        <option value="2013">2013</option>
+        <option value="2012">2012</option>
+        <option value="2011">2011</option>
+        <option value="2010">2010</option>
+      </select>
+    </div>
+
+    <div class="agreement">
+      <label for="agreement">I agree to the terms and conditions</label>
+      <input type="checkbox" name="agreement" value="agreed" id=agreement required=true>
+    </div>
+
+    <div class="submit">
+      <input type="submit" value="Submit">
+    </div>
+  </form>
+</body>
+
+</html>
