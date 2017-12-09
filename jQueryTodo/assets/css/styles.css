@@ -1,0 +1,15 @@
+*{
+    box-sizing: border-box;
+}
+
+#container {
+    border: 2px solid #3949AB;
+    width: 360px;
+    margin: 0 auto;
+    padding: 10px;
+}
+
+.completed {
+    text-decoration: line-through;
+    color: grey;
+}
