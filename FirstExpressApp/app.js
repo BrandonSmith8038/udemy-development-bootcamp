@@ -15,6 +15,10 @@ app.get('/dog', (req, res) => {
   res.send('MEOW');
 });
 
+app.get('*', (req, res) => {
+  res.send('Your Are A Star');
+});
+
 const port = process.env.PORT || 3000;
 const ip = process.env.IP;
 
