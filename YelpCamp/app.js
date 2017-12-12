@@ -42,7 +42,7 @@ app.get('/campgrounds', (req, res) => {
     if (err) {
       console.log(err);
     } else {
-      res.render('campgrounds', { campgrounds: allcampgrounds });
+      res.render('index', { campgrounds: allcampgrounds });
     }
   });
 });
@@ -81,6 +81,13 @@ app.get('/campgrounds/new', (req, res) => {
 
 app.get('/campgrounds/:id', (req, res) => {
   //Find the campground with the provided ID
+  Campground.findById(req.params.id, (err, foundCampground) => {
+    if (err) {
+      console.log(err);
+    } else {
+      res.render('show', { campground: foundCampground });
+    }
+  });
 });
 
 const port = process.env.PORT || 3000;
