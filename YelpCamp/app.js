@@ -1,58 +1,33 @@
 const express = require('express');
 const request = require('request');
 const bodyParser = require('body-parser');
+const mongoose = require('mongoose');
 const app = express();
 
-const campgrounds = [
-  {
-    name: 'Salmon Creek',
-    image: 'https://farm6.staticflickr.com/5334/9925256586_c06d949b3e.jpg'
-  },
-  {
-    name: 'Granite Hill',
-    image: 'https://farm5.staticflickr.com/4514/36822417253_1d7f340b3a.jpg'
-  },
-  {
-    name: "Mountian Goat's Rest",
-    image: 'https://farm5.staticflickr.com/4137/4812576807_8ba9255f38.jpg'
-  },
-  {
-    name: 'Salmon Creek',
-    image: 'https://farm6.staticflickr.com/5334/9925256586_c06d949b3e.jpg'
-  },
-  {
-    name: 'Granite Hill',
-    image: 'https://farm5.staticflickr.com/4514/36822417253_1d7f340b3a.jpg'
-  },
-  {
-    name: "Mountian Goat's Rest",
-    image: 'https://farm5.staticflickr.com/4137/4812576807_8ba9255f38.jpg'
-  },
-  {
-    name: 'Salmon Creek',
-    image: 'https://farm6.staticflickr.com/5334/9925256586_c06d949b3e.jpg'
-  },
-  {
-    name: 'Granite Hill',
-    image: 'https://farm5.staticflickr.com/4514/36822417253_1d7f340b3a.jpg'
-  },
-  {
-    name: "Mountian Goat's Rest",
-    image: 'https://farm5.staticflickr.com/4137/4812576807_8ba9255f38.jpg'
-  },
-  {
-    name: 'Salmon Creek',
-    image: 'https://farm6.staticflickr.com/5334/9925256586_c06d949b3e.jpg'
-  },
-  {
-    name: 'Granite Hill',
-    image: 'https://farm5.staticflickr.com/4514/36822417253_1d7f340b3a.jpg'
-  },
-  {
-    name: "Mountian Goat's Rest",
-    image: 'https://farm5.staticflickr.com/4137/4812576807_8ba9255f38.jpg'
-  }
-];
+//Map global promie - get rid of the warning
+
+mongoose.Promise = global.Promise;
+
+//Connect to mongoose
+
+mongoose
+  .connect(
+    'mongodb://cowboy8038:Nascar8038@ds135876.mlab.com:35876/reddirt-yelp-camp',
+    {
+      useMongoClient: true
+    }
+  )
+  .then(() => console.log('MongoDB Connected'))
+  .catch(err => console.log(err));
+
+//SCHEMA SETUP
+const campgroundSchema = new mongoose.Schema({
+  name: String,
+  image: String,
+  description: String
+});
+
+const Campground = mongoose.model('Campground', campgroundSchema);
 
 app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -62,22 +37,50 @@ app.get('/', (req, res) => {
 });
 
 app.get('/campgrounds', (req, res) => {
-  res.render('campgrounds', { campgrounds: campgrounds });
+  //Get all campground from DB
+  Campground.find({}, (err, allcampgrounds) => {
+    if (err) {
+      console.log(err);
+    } else {
+      res.render('campgrounds', { campgrounds: allcampgrounds });
+    }
+  });
 });
 
 app.post('/campgrounds', (req, res) => {
   const name = req.body.name;
   const img = req.body.image;
+  const description = req.body.description;
 
-  const newCampground = { name: name, image: img };
+  const newCampground = { name: name, image: img, description: description };
 
-  campgrounds.push(newCampground);
+  //Creat A New Campground and Save It To The Database
+
+  Campground.create(
+    {
+      name: name,
+      image: img,
+      description: description
+    },
+    (err, campground) => {
+      if (err) {
+        console.log(err);
+      } else {
+        console.log('New Campground Added');
+        console.log(campground);
+      }
+    }
+  );
 
   res.redirect('/campgrounds');
 });
 
 app.get('/campgrounds/new', (req, res) => {
   res.render('new');
+});
+
+app.get('/campgrounds/:id', (req, res) => {
+  //Find the campground with the provided ID
 });
 
 const port = process.env.PORT || 3000;
