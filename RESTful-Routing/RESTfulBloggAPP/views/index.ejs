@@ -5,15 +5,16 @@
 <% stories.forEach((story) => { %>
 
 
-  <div>
-    <h2><%= story.title %></h2>
+  <div class="ui main text container">
+      <h2><%= story.title %></h2>
     <p><%= story.created %></p>
   </div>
   <div>
     <img src="<%= story.image %>" alt="">
   </div>
   <div>
-    <%= story.body %>
+    <p><%= story.body.substring(0, 100) %> ...</p>
+    <a href="story/<%=story.id%>">Read More</a>
   </div>
 
 

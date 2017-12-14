@@ -71,6 +71,17 @@ app.post('/story/create', (req, res) => {
   res.redirect('/index');
 });
 
+//Show Route
+app.get('/story/:id', (req, res ) => {
+ Story.findById(req.params.id, (err, foundStory) => {
+   if(err){
+     console.log(err)
+   } else {
+      res.render('show', {story: foundStory})
+   }
+ })
+})
+
 const port = process.env.PORT || 8888;
 const ip = process.env.IP;
 
