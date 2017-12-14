@@ -108,6 +108,18 @@ app.put('/story/:id', (req, res) => {
 })
 
 
+//Delete Route
+
+app.delete("/story/:id", (req, res) => {
+  Story.findByIdAndRemove(req.params.id, (err) => {
+    if(err){
+      res.redirect('/index')
+    } else {
+      res.redirect('/index')
+    }
+  })
+})
+
 const port = process.env.PORT || 8888;
 const ip = process.env.IP;
 
