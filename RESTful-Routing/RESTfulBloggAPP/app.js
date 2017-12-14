@@ -1,11 +1,14 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
+const methodOverride = require('method-override')
 const app = express();
 
 app.set('view engine', 'ejs');
 
 app.use(express.static('public'));
+
+app.use(methodOverride("_method"))
 
 app.use(bodyParser.urlencoded({ extended: true }));
 //Map global promise(get rid of the warning)
@@ -81,6 +84,29 @@ app.get('/story/:id', (req, res ) => {
    }
  })
 })
+
+//Edit Route
+app.get('/story/:id/edit', (req, res) => {
+  Story.findById(req.params.id, (err, foundStory) => {
+    if(err){
+      console.log(err)
+    } else {
+      res.render('edit', {story: foundStory})
+    }
+  }) 
+})
+
+//Update Route
+app.put('/story/:id', (req, res) => {
+  Story.findByIdAndUpdate(req.params.id, req.body.story, (err, updateStory) => {
+    if(err) {
+      res.redirect('/index')
+    } else {
+      res.redirect(`/story/${req.params.id}`)
+    }
+  })
+})
+
 
 const port = process.env.PORT || 8888;
 const ip = process.env.IP;
