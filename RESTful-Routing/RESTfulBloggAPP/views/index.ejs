@@ -1,10 +1,13 @@
-<a href="/new">Add New Post</a>
+<% include ./partials/header %>
+
+<a href="/story/new">Add New Post</a>
 
 <% stories.forEach((story) => { %>
 
 
   <div>
-    <%= story.title %>
+    <h2><%= story.title %></h2>
+    <p><%= story.created %></p>
   </div>
   <div>
     <img src="<%= story.image %>" alt="">
@@ -16,3 +19,5 @@
 
 
   <% }) %>
+  
+  <% include ./partials/footer %>

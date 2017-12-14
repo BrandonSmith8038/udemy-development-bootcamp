@@ -51,12 +51,12 @@ app.get('/index', (req, res) => {
 });
 
 //Add New Post Form
-app.get('/new', (req, res) => {
+app.get('/story/new', (req, res) => {
   res.render('new');
 });
 
 //Capture Form Post Request
-app.post('/create', (req, res) => {
+app.post('/story/create', (req, res) => {
   const title = req.body.title;
   const image = req.body.image;
   const body = req.body.body;
