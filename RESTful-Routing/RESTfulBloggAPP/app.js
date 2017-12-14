@@ -2,6 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const methodOverride = require('method-override')
+const expressSanitizer = require('express-sanitizer')
 const app = express();
 
 app.set('view engine', 'ejs');
@@ -11,6 +12,8 @@ app.use(express.static('public'));
 app.use(methodOverride("_method"))
 
 app.use(bodyParser.urlencoded({ extended: true }));
+
+app.use(expressSanitizer())
 //Map global promise(get rid of the warning)
 
 mongoose.Promise = global.Promise;
@@ -60,6 +63,7 @@ app.get('/story/new', (req, res) => {
 
 //Capture Form Post Request
 app.post('/story/create', (req, res) => {
+      req.body.story.body = req.sanitize(req.body.story.body),
   Story.create(
       req.body.story,
     (err, Story) => {
@@ -98,6 +102,7 @@ app.get('/story/:id/edit', (req, res) => {
 
 //Update Route
 app.put('/story/:id', (req, res) => {
+  req.body.story.body = req.sanitize(req.body.story.body)
   Story.findByIdAndUpdate(req.params.id, req.body.story, (err, updateStory) => {
     if(err) {
       res.redirect('/index')
