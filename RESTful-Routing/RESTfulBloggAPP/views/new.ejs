@@ -1,20 +1,25 @@
 <% include ./partials/header %>
 
-<h1>Add New Post</h1>
 
-<form action="/story/create" method="POST">
-  <div>
-    <input type="text" name="title" placeholder="TITLE">
+<div class="ui main text container segment">
+  <div class="ui huge header">
+    <h1>Add New Post</h1>
   </div>
-  <div>
-    <input type="text" name="image" placeholder="Image URL">
-  </div>
-  <div>
-    <textarea name="body"></textarea>
-  </div>
-  <div>
-    <button>Submit</button>
-  </div>
-</form>
+  <form class="ui form"action="/story/create" method="POST">
+    <div class="field">
+      <label>Title</label>
+      <input type="text" name="story[title]">
+    </div>
+    <div class="field">
+      <label>Image</label>
+      <input type="text" name="story[image]">
+    </div>
+    <div class="field">
+      <label>Story Content</label>
+      <textarea name="story[body]"></textarea>
+    </div>
+      <input class="ui purple big basic button" type='submit' value="Add Post">
+  </form>
+</div>
 
 <% include ./partials/footer %>

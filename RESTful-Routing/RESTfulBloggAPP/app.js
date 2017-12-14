@@ -57,16 +57,8 @@ app.get('/story/new', (req, res) => {
 
 //Capture Form Post Request
 app.post('/story/create', (req, res) => {
-  const title = req.body.title;
-  const image = req.body.image;
-  const body = req.body.body;
-
   Story.create(
-    {
-      title,
-      body,
-      image
-    },
+      req.body.story,
     (err, Story) => {
       if (err) {
         console.log(err);
