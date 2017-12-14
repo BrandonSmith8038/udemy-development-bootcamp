@@ -1,0 +1,25 @@
+<% include ./partials/header %>
+
+
+<div class="ui main text container segment">
+  <div class="ui huge header">
+    <h1>Edit <%= story.title %></h1>
+  </div>
+  <form class="ui form"action="/story/<%= story._id %>?_method=PUT" method="POST">
+    <div class="field">
+      <label>Title</label>
+      <input type="text" name="story[title]" value="<%= story.title %>">
+    </div>
+    <div class="field">
+      <label>Image</label>
+      <input type="text" value="<%= story.image %>" name="story[image]">
+    </div>
+    <div class="field">
+      <label>Story Content</label>
+      <textarea name="story[body]"><%= story.body %></textarea>
+    </div>
+      <input class="ui purple big basic button" type='submit' value="Update Post">
+  </form>
+</div>
+
+<% include ./partials/footer %>

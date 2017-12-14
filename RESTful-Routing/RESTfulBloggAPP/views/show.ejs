@@ -1,0 +1,22 @@
+<% include ./partials/header %>
+    <div class="ui main text container segment">
+        <div class="ui huge header">
+            <%= story.title %>
+        </div>
+        <div class="ui top attached">
+            <div class="item">
+                <img class="ui centered rounded image" src="<%= story.image %>">
+            </div>
+            <div class="content">
+                <span><%- story.created.toDateString() %></span>
+            </div>
+            <div class="description">
+                <p><%= story.body %></p>
+            </div>
+            <a class="ui blue big basic button" href="/story/<%=story.id%>/edit">Edit Post</a>
+            <form id='delete' action="/story/<%= story._id %>?_method=DELETE" method="POST">
+                <button class="ui red big basic button">Delete Post</button>
+            </form>
+        </div>
+    </div>
+<% include ./partials/footer %>
