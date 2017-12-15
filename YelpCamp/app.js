@@ -2,6 +2,7 @@ const express = require('express');
 const request = require('request');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
+const Campground = require('./models/campground')
 const app = express();
 
 //Map global promie - get rid of the warning
@@ -21,13 +22,6 @@ mongoose
   .catch(err => console.log(err));
 
 //SCHEMA SETUP
-const campgroundSchema = new mongoose.Schema({
-  name: String,
-  image: String,
-  description: String
-});
-
-const Campground = mongoose.model('Campground', campgroundSchema);
 
 app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({ extended: true }));
