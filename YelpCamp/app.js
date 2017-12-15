@@ -1,8 +1,13 @@
 const express = require('express');
 const request = require('request');
-const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
+const bodyParser = require('body-parser');
 const Campground = require('./models/campground')
+const seedDB = require('./seeds')
+
+seedDB()
+
+
 const app = express();
 
 //Map global promie - get rid of the warning
@@ -75,10 +80,11 @@ app.get('/campgrounds/new', (req, res) => {
 
 app.get('/campgrounds/:id', (req, res) => {
   //Find the campground with the provided ID
-  Campground.findById(req.params.id, (err, foundCampground) => {
+  Campground.findById(req.params.id).populate('comments').exec((err, foundCampground) => {
     if (err) {
       console.log(err);
     } else {
+      console.log(foundCampground)
       res.render('show', { campground: foundCampground });
     }
   });

@@ -10,6 +10,12 @@
     <p>
       <%= campground.description %>
     </p>
+    
+    <% campground.comments.forEach((comment) => { %>
+      <p>
+        <strong><%= comment.author %></strong> - <%= comment.text %>
+      </p>
+    <% }) %>
 
     <a href="/campgrounds" class="btn btn-primary">Go Back</a>
   </div>
