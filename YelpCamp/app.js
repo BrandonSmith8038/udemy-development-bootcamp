@@ -3,6 +3,7 @@ const request = require('request');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const Campground = require('./models/campground')
+const Comment = require('./models/comment')
 const seedDB = require('./seeds')
 
 seedDB()
@@ -41,7 +42,7 @@ app.get('/campgrounds', (req, res) => {
     if (err) {
       console.log(err);
     } else {
-      res.render('index', { campgrounds: allcampgrounds });
+      res.render('campgrounds/index', { campgrounds: allcampgrounds });
     }
   });
 });
@@ -75,7 +76,7 @@ app.post('/campgrounds', (req, res) => {
 });
 
 app.get('/campgrounds/new', (req, res) => {
-  res.render('new');
+  res.render('campgrounds/new');
 });
 
 app.get('/campgrounds/:id', (req, res) => {
@@ -84,14 +85,57 @@ app.get('/campgrounds/:id', (req, res) => {
     if (err) {
       console.log(err);
     } else {
-      console.log(foundCampground)
-      res.render('show', { campground: foundCampground });
+      res.render('campgrounds/show', { campground: foundCampground });
     }
   });
 });
 
+//==============================================
+//Comments Route
+//==============================================
+//New Comment
+
+app.get('/campgrounds/:id/comments/new', (req, res) => {
+  
+  Campground.findById(req.params.id, (err, campground) => {
+     if(err){
+       console.log(err)
+     } else {
+        res.render('comments/new', {campground: campground})
+     }
+  })
+  
+})
+
+app.post('/campgrounds/:id/comments', (req, res) => {
+  Campground.findById(req.params.id, (err, campground) => {
+    if(err){
+      console.log(err)
+    } else {
+      
+      Comment.create(
+        {
+          text: req.body.comment.text,
+          author: req.body.comment.author
+        }, (err, comment) => {
+          if(err){
+            console.log(err)
+          } else {
+            campground.comments.push(comment)
+            campground.save()
+            res.redirect(`/campgrounds/${campground._id}`)
+          }
+        }
+        )
+    }
+  })
+})
+
 const port = process.env.PORT || 3000;
 const ip = process.env.IP;
+
+
+
 
 app.listen(port, ip, () => {
   console.log(`App started on port ${port}`);
