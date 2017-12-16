@@ -10,21 +10,34 @@ const User = require('./models/user')
 
 const app = express()
 
+app.set('view engine', 'ejs')
+
+app.use(bodyParser.urlencoded({extended: true}))
+
+//=========================================
+//Express Setup
+//=========================================
+
 app.use(require('express-session')({
     secret: 'Brandon is awesome',
     resave: false,
     saveUninitialized: false
 }))
 
+//=========================================
+//Passport Setup
+//=========================================
+
 passport.serializeUser(User.serializeUser())
 passport.deserializeUser(User.deserializeUser())
 
-app.set('view engine', 'ejs')
 
 app.use(passport.initialize())
 app.use(passport.session())
 
-app.use(bodyParser.urlencoded({extended: true}))
+//=========================================
+//Mongoose Setup
+//=========================================
 
 //Map global promie - get rid of the warning
 
@@ -40,14 +53,40 @@ mongoose
   .then(() => console.log('MongoDB Connected'))
   .catch(err => console.log(err));
 
-
+//=========================================
+//Routes
+//=========================================
 app.get('/', (req, res) => {
     res.render('home')
+})
+
+app.get('/register', (req, res) => {
+    res.render('register')
+})
+
+app.post('/register', (req, res) => {
+    const username = req.body.username
+    const password = req.body.password
+    
+    User.register(new User({username: username}), password, (err, user) => {
+        if(err){
+            console.log(err)
+            return res.render('/register')
+        } else {
+            passport.authenticate('local')(req, res, () => {
+                res.redirect('/secret')
+            })
+        }
+    })
 })
 
 app.get('/secret', (req, res) => {
  res.render('secret')   
 })
+
+//=========================================
+//Start up App
+//=========================================
 
 const port = process.env.PORT || 3000
 const ip = process.env.IP
