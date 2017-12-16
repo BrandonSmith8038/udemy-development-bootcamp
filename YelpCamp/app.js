@@ -2,6 +2,7 @@ const express = require('express');
 const request = require('request');
 const mongoose = require('mongoose');
 const LocalStrategy = require('passport-local')
+const passport = require('passport')
 const bodyParser = require('body-parser');
 const User = require('./models/user')
 const Campground = require('./models/campground')
@@ -25,6 +26,22 @@ app.use(bodyParser.urlencoded({ extended: true }));
 //========================================
 
 seedDB()
+
+//========================================
+//Passport Setup
+//========================================
+
+app.use(require('express-session')({
+  secret: 'Brandon is awesome',
+  resave: false,
+  saveUninitialized: false
+}))
+
+app.use(passport.initialize())
+app.use(passport.session())
+passport.use(new LocalStrategy(User.authenticate()))
+passport.serializeUser(User.serializeUser())
+passport.deserializeUser(User.deserializeUser())
 
 //========================================
 //Mongoose Setup
@@ -151,6 +168,24 @@ app.post('/campgrounds/:id/comments', (req, res) => {
         }
         )
     }
+  })
+})
+
+//Show register form
+app.get('/register', (req, res) => {
+  res.render('register')
+})
+//Handle Sign Up Logic
+app.post('/register', (req, res) => {
+  const newUser = new User({username: req.body.username})
+  User.register(newUser, req.body.password, (err, user) => {
+    if(err){
+      console.log(err)
+      return res.render('register')
+    }
+    passport.authenticate('local')(req, res, () => {
+      res.redirect('/campgrounds')
+    })
   })
 })
 
