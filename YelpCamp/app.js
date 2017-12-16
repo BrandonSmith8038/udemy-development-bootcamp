@@ -188,8 +188,18 @@ app.post('/register', (req, res) => {
     })
   })
 })
+//Show Login Form
+app.get('/login', (req, res) => {
+  res.render('login')
+})
 
-
+//Handle login form logic
+app.post('/login', passport.authenticate('local', {
+  successRedirect: '/campgrounds',
+  failureRedirect: '/login'
+}), (req, res) => {
+  //Callback, doesn't do anything, using middleware instead
+})
 //========================================
 //Serve App
 //========================================
