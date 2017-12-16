@@ -79,6 +79,11 @@ const isLoggedIn = (req, res, next) => {
 //Routes
 //========================================
 
+app.use((req, res, next) => {
+  res.locals.currentUser = req.user
+  next()
+})
+
 //Home Page Route
 app.get('/', (req, res) => {
   res.render('home');
@@ -86,12 +91,13 @@ app.get('/', (req, res) => {
 
 //Display All Campgrounds
 app.get('/campgrounds', (req, res) => {
+  console.log(req.user)
   //Get all campground from DB
   Campground.find({}, (err, allcampgrounds) => {
     if (err) {
       console.log(err);
     } else {
-      res.render('campgrounds/index', { campgrounds: allcampgrounds });
+      res.render('campgrounds/index', { campgrounds: allcampgrounds, currentUser: req.user });
     }
   });
 });
