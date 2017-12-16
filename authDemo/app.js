@@ -31,7 +31,7 @@ app.use(require('express-session')({
 passport.serializeUser(User.serializeUser())
 passport.deserializeUser(User.deserializeUser())
 
-
+passport.use(new LocalStrategy(User.authenticate()));
 app.use(passport.initialize())
 app.use(passport.session())
 
@@ -71,13 +71,24 @@ app.post('/register', (req, res) => {
     User.register(new User({username: username}), password, (err, user) => {
         if(err){
             console.log(err)
-            return res.render('/register')
+            return res.render('register')
         } else {
             passport.authenticate('local')(req, res, () => {
                 res.redirect('/secret')
             })
         }
     })
+})
+
+app.get('/login', (req,res) => {
+    res.render('login')
+})
+
+app.post('/login', passport.authenticate('local', {
+   successRedirect: '/secret',
+   failureRedirect: '/login'
+}), (req,res) => {
+    
 })
 
 app.get('/secret', (req, res) => {
