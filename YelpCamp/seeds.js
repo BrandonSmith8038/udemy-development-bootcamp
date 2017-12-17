@@ -26,7 +26,7 @@ const seedDB = () => {
   // Remove All Campgrounds
 
   Campground.remove({}, err => {
-    if (err) {
+    /*if (err) {
       console.log(err);
     }
     console.log('Removed Camgrounds');
@@ -63,7 +63,7 @@ const seedDB = () => {
           );
         }
       });
-    });
+    });*/
   });
 };
 

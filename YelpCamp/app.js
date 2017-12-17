@@ -62,7 +62,7 @@ const commentRoutes = require('./routes/comments'),
 //Populate Database
 //========================================
 
-seedDB();
+//seedDB();
 
 
 
