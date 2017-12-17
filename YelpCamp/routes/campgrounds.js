@@ -2,6 +2,13 @@ const express = require('express');
 const router = express.Router();
 const Campground = require('../models/campground');
 
+const isLoggedIn = (req, res, next) => {
+  if (req.isAuthenticated()) {
+    return next();
+  }
+  res.redirect('/login');
+};
+
 //Display All Campgrounds
 router.get('/', (req, res) => {
   console.log(req.user);
@@ -19,21 +26,21 @@ router.get('/', (req, res) => {
 });
 
 //Handle App New Campground
-router.post('/', (req, res) => {
+router.post('/', isLoggedIn, (req, res) => {
   const name = req.body.name;
   const img = req.body.image;
   const description = req.body.description;
+  const author = {
+    id: req.user.id,
+    username: req.user.username
+  }
 
-  const newCampground = { name: name, image: img, description: description };
-
+  const newCampground = { name: name, image: img, description: description, author: author };
+  
   //Creat A New Campground and Save It To The Database
 
   Campground.create(
-    {
-      name: name,
-      image: img,
-      description: description
-    },
+      newCampground,
     (err, campground) => {
       if (err) {
         console.log(err);
@@ -44,11 +51,11 @@ router.post('/', (req, res) => {
     }
   );
 
-  res.redirect('/');
+  res.redirect('/campgrounds');
 });
 
 //Display Add New Camground Form
-router.get('/new', (req, res) => {
+router.get('/new', isLoggedIn, (req, res) => {
   res.render('campgrounds/new');
 });
 
