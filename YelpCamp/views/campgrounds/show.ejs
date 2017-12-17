@@ -1,7 +1,7 @@
 <%- include('../partials/header') %>
 
   <div class="container">
-    
+
     <div class="row">
       <div class="col-md-3">
         <p class="lead">Yelp Camp</p>
@@ -20,7 +20,9 @@
             $9/night
           </h4>
           <h1>
-            <a><%=campground.name%></a>
+            <a>
+              <%=campground.name%>
+            </a>
           </h1>
           <p>
             <%= campground.description %>
@@ -33,26 +35,28 @@
             <% campground.comments.forEach((comment) => { %>
               <div class="row">
                 <div class="col-md-12">
-                  <strong><%= comment.author %></strong>
+                  <strong>
+                    <%= comment.author %>
+                  </strong>
                   <span class="pull-right">10 Days Ago</span>
                   <p>
                     <%= comment.text %>
                   </p>
                 </div>
               </div>
-              
-            <% }) %>
+
+              <% }) %>
           </div>
         </div>
-       
-    
-        
-        
+
+
+
+
         <a href="/campgrounds" class="btn btn-primary">Go Back</a>
       </div>
     </div>
-    
-    
+
+
   </div>
 
   <%- include('../partials/footer') %>
