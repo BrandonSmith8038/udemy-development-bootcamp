@@ -3,7 +3,7 @@ const router = express.Router();
 const Campground = require('../models/campground');
 
 //Display All Campgrounds
-router.get('/campgrounds', (req, res) => {
+router.get('/', (req, res) => {
   console.log(req.user);
   //Get all campground from DB
   Campground.find({}, (err, allcampgrounds) => {
@@ -19,7 +19,7 @@ router.get('/campgrounds', (req, res) => {
 });
 
 //Handle App New Campground
-router.post('/campgrounds', (req, res) => {
+router.post('/', (req, res) => {
   const name = req.body.name;
   const img = req.body.image;
   const description = req.body.description;
@@ -44,16 +44,16 @@ router.post('/campgrounds', (req, res) => {
     }
   );
 
-  res.redirect('/campgrounds');
+  res.redirect('/');
 });
 
 //Display Add New Camground Form
-router.get('/campgrounds/new', (req, res) => {
+router.get('/new', (req, res) => {
   res.render('campgrounds/new');
 });
 
 //Display Individual Campground
-router.get('/campgrounds/:id', (req, res) => {
+router.get('/:id', (req, res) => {
   //Find the campground with the provided ID
   Campground.findById(req.params.id)
     .populate('comments')

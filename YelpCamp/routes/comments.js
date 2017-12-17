@@ -1,5 +1,7 @@
 const express = require('express');
-const router = express.Router();
+const router = express.Router({mergeParams: true});
+var Campground = require("../models/campground");
+var Comment = require("../models/comment");
 
 //========================================
 //Middleware
@@ -13,7 +15,7 @@ const isLoggedIn = (req, res, next) => {
 };
 
 //Displays new comment form
-router.get('/campgrounds/:id/comments/new', isLoggedIn, (req, res) => {
+router.get('/new', isLoggedIn, (req, res) => {
   Campground.findById(req.params.id, (err, campground) => {
     if (err) {
       console.log(err);
@@ -23,10 +25,8 @@ router.get('/campgrounds/:id/comments/new', isLoggedIn, (req, res) => {
   });
 });
 
-const Campground = require('../models/campground');
-
 //Handles Add New Comment
-router.post('/campgrounds/:id/comments', isLoggedIn, (req, res) => {
+router.post('/', isLoggedIn, (req, res) => {
   Campground.findById(req.params.id, (err, campground) => {
     if (err) {
       console.log(err);

@@ -1,24 +1,13 @@
 const express = require('express');
 const router = express.Router();
-const mongoose = require('mongoose');
-const LocalStrategy = require('passport-local');
 const passport = require('passport');
 const User = require('../models/user');
 //========================================
 //Middleware
 //========================================
 
-const isLoggedIn = (req, res, next) => {
-  if (req.isAuthenticated()) {
-    return next();
-  }
-  res.redirect('/login');
-};
 
-router.use((req, res, next) => {
-  res.locals.currentUser = req.user;
-  next();
-});
+
 
 //Home Page Route
 router.get('/', (req, res) => {
@@ -64,5 +53,12 @@ router.get('/logout', (req, res) => {
   req.logout();
   res.redirect('/campgrounds');
 });
+
+const isLoggedIn = (req, res, next) => {
+  if (req.isAuthenticated()) {
+    return next();
+  }
+  res.redirect('/login');
+};
 
 module.exports = router;

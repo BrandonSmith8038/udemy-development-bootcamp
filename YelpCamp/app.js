@@ -9,13 +9,6 @@ const Campground = require('./models/campground');
 const Comment = require('./models/comment');
 const seedDB = require('./seeds');
 
-//========================================
-//Require Routes
-//========================================
-
-const commentRoutes = require('./routes/comments'),
-  campgroundRoutes = require('./routes/campgrounds'),
-  authRoutes = require('./routes/index');
 
 //========================================
 //App Setup
@@ -29,15 +22,6 @@ app.use(express.static(__dirname + '/public'));
 
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.use(campgroundRoutes);
-app.use(commentRoutes);
-app.use(authRoutes);
-
-//========================================
-//Populate Database
-//========================================
-
-seedDB();
 
 //========================================
 //Passport Setup
@@ -58,6 +42,31 @@ passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
 //========================================
+//Require Routes
+//========================================
+
+app.use((req, res, next) => {
+  res.locals.currentUser = req.user;
+  next();
+});
+
+const commentRoutes = require('./routes/comments'),
+  campgroundRoutes = require('./routes/campgrounds'),
+  authRoutes = require('./routes/index');
+  
+  app.use('/campgrounds', campgroundRoutes);
+  app.use('/campgrounds/:id/comments',commentRoutes);
+  app.use(authRoutes);
+
+//========================================
+//Populate Database
+//========================================
+
+seedDB();
+
+
+
+//========================================
 //Mongoose Setup
 //========================================
 //Map global promie - get rid of the warning
@@ -75,17 +84,6 @@ mongoose
   )
   .then(() => console.log('MongoDB Connected'))
   .catch(err => console.log(err));
-
-//SCHEMA SETUP
-
-//========================================
-//Routes
-//========================================
-
-app.use((req, res, next) => {
-  res.locals.currentUser = req.user;
-  next();
-});
 
 //========================================
 //Serve App
