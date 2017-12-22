@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const LocalStrategy = require('passport-local');
 const passport = require('passport');
 const bodyParser = require('body-parser');
+const methodOverride = require('method-override')
 const User = require('./models/user');
 const Campground = require('./models/campground');
 const Comment = require('./models/comment');
@@ -22,6 +23,7 @@ app.use(express.static(__dirname + '/public'));
 
 app.use(bodyParser.urlencoded({ extended: true }));
 
+app.use(methodOverride("_method"))
 
 //========================================
 //Passport Setup
