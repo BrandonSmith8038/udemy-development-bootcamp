@@ -94,4 +94,15 @@ router.put('/:id', (req, res) => {
  })
 })
 
+//Delete Campground Route
+router.delete('/:id/', (req, res) => {
+  Campground.findByIdAndRemove(req.params.id, (err, foundCampground) => {
+    if(err){
+      res.redirect('/campgrounds')
+    } else {
+      res.redirect('/campgrounds')
+    }
+  })
+})
+
 module.exports = router;
