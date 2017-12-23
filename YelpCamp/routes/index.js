@@ -21,6 +21,10 @@ router.get('/register', (req, res) => {
 //Handle Sign Up Logic
 router.post('/register', (req, res) => {
   const newUser = new User({ username: req.body.username });
+  if(req.body.adminCode === 'secretcode123'){
+    newUser.isAdmin = true
+  }
+  
   User.register(newUser, req.body.password, (err, user) => {
     if (err) {
       req.flash("error", err.message)
@@ -45,7 +49,6 @@ router.post(
     failureRedirect: '/login'
   }),
   (req, res) => {
-    //Callback, doesn't do anything, using middleware instead
   }
 );
 

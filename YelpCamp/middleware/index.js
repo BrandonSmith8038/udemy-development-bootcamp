@@ -17,7 +17,7 @@ middleWareObject.checkCommentOwnership = (req, res, next) => {
       if(err){
         res.redirect('back')
       } else {
-        if(foundComment.author.id.equals(req.user.id)){
+        if(foundComment.author.id.equals(req.user.id) || req.user.isAdmin){
           next()
         } else {
           req.flash("error", "Permission Denied")
@@ -41,7 +41,7 @@ middleWareObject.checkCampgroundOwnership = (req, res, next) => {
           req.flash("error", "Campground Not Found")
           res.redirect('back')
         } else {
-          if(foundCampground.author.id.equals(req.user.id) ){
+          if(foundCampground.author.id.equals(req.user.id)  || req.user.isAdmin){
             next()
           } else {
             req.flash("error", "Permission Denied")

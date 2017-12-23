@@ -10,6 +10,7 @@
     "express": "^4.16.2",
     "express-session": "^1.15.6",
     "geocoder": "^0.2.3",
+    "locus": "^2.0.1",
     "method-override": "^2.3.10",
     "moment": "^2.20.1",
     "mongodb": "^3.0.0-rc0",
