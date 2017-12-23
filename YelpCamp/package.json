@@ -22,7 +22,7 @@
     "eslint-plugin-import": "^2.8.0"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node app.js"
   },
   "author": "Brandon Smith",
   "license": "ISC"
