@@ -20,11 +20,13 @@ middleWareObject.checkCommentOwnership = (req, res, next) => {
         if(foundComment.author.id.equals(req.user.id)){
           next()
         } else {
+          req.flash("error", "Permission Denied")
           res.redirect('back')
         }
       }
     })
   } else {
+    req.flash("error", "Please login first!")
     res.redirect('back')
   }
 }
@@ -36,17 +38,20 @@ middleWareObject.checkCampgroundOwnership = (req, res, next) => {
         Campground.findById(req.params.id, (err, foundCampground) => {
          
         if(err){
+          req.flash("error", "Campground Not Found")
           res.redirect('back')
         } else {
           if(foundCampground.author.id.equals(req.user.id) ){
             next()
           } else {
+            req.flash("error", "Permission Denied")
             res.redirect('back')
           }
         }
       })
     } else {
-     res.redirect("back")
+        req.flash("error", "Please login first!")
+        res.redirect("back")
     }
 }
 
