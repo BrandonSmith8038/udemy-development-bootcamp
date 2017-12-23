@@ -33,7 +33,7 @@ router.post('/register', (req, res) => {
 });
 //Show Login Form
 router.get('/login', (req, res) => {
- res.render("login", {message: req.flash('error')})
+ res.render("login")
 });
 
 //Handle login form logic
@@ -51,6 +51,7 @@ router.post(
 //Logout Route
 router.get('/logout', (req, res) => {
   req.logout();
+  req.flash("success", 'Logged You Out!')
   res.redirect('/campgrounds');
 });
 
