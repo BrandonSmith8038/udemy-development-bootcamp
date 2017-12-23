@@ -1,7 +1,7 @@
 <%- include('../partials/header') %>
 
   <h1 class="text-center">Add New Comment to <%= campground.name %></h1>
-  <div class="">
+
     <div class="row">
       <div style="width: 30%; margin: 25px auto;">
         <form action="/campgrounds/<%= campground._id %>/comments" method="POST">
@@ -15,6 +15,5 @@
         <a href="/campgrounds">Go Back</a>
       </div>
     </div>
-  </div>
 
   <%- include('../partials/footer') %>
