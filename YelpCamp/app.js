@@ -28,6 +28,8 @@ app.use(methodOverride("_method"))
 
 app.use(flash())
 
+app.locals.moment = require('moment')
+
 //========================================
 //Passport Setup
 //========================================
