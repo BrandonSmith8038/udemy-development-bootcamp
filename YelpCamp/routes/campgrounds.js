@@ -1,7 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const Campground = require('../models/campground');
-const middleWare = require("../middleware")
+const middleware = require("../middleware")
+const geocoder = require("geocoder")
 
 
 //Display All Campgrounds
@@ -21,35 +22,37 @@ router.get('/', (req, res) => {
 });
 
 //Handle App New Campground
-router.post('/', middleWare.isLoggedIn, (req, res) => {
-  const name = req.body.name;
-  const img = req.body.image;
-  const description = req.body.description;
-  const author = {
-    id: req.user.id,
-    username: req.user.username
+//CREATE - add new campground to DB
+router.post("/", middleware.isLoggedIn, function(req, res){
+  // get data from form and add to campgrounds array
+  var name = req.body.name;
+  var image = req.body.image;
+  var desc = req.body.description;
+  var author = {
+      id: req.user._id,
+      username: req.user.username
   }
-
-  const newCampground = { name: name, image: img, description: description, author: author };
-  
-  //Creat A New Campground and Save It To The Database
-
-  Campground.create(
-      newCampground,
-    (err, campground) => {
-      if (err) {
-        console.log(err);
-      } else {
-        console.log('New Campground Added');
-      }
-    }
-  );
-
-  res.redirect('/campgrounds');
+  var cost = req.body.cost;
+  geocoder.geocode(req.body.location, function (err, data) {
+    var lat = data.results[0].geometry.location.lat;
+    var lng = data.results[0].geometry.location.lng;
+    var location = data.results[0].formatted_address;
+    var newCampground = {name: name, image: image, description: desc, cost: cost, author:author, location: location, lat: lat, lng: lng};
+    // Create a new campground and save to DB
+    Campground.create(newCampground, function(err, newlyCreated){
+        if(err){
+            console.log(err);
+        } else {
+            //redirect back to campgrounds page
+            console.log(newlyCreated);
+            res.redirect("/campgrounds");
+        }
+    });
+  });
 });
 
 //Display Add New Camground Form
-router.get('/new', middleWare.isLoggedIn, (req, res) => {
+router.get('/new', middleware.isLoggedIn, (req, res) => {
   res.render('campgrounds/new');
 });
 
@@ -68,7 +71,7 @@ router.get('/:id', (req, res) => {
 });
 
 //Edit Campground Route
-router.get('/:id/edit', middleWare.checkCampgroundOwnership, (req, res) => {
+router.get('/:id/edit', middleware.checkCampgroundOwnership, (req, res) => {
     Campground.findById(req.params.id, (err, foundCampground) => {
       res.render('campgrounds/edit', {campground: foundCampground})
     })
@@ -76,18 +79,26 @@ router.get('/:id/edit', middleWare.checkCampgroundOwnership, (req, res) => {
 
 
 //Update Campground Route
-router.put('/:id', middleWare.checkCampgroundOwnership, (req, res) => {
- Campground.findByIdAndUpdate(req.params.id, req.body.campground, (err, updatedCampground) => {
-   if(err){
-     res.redirect('/campground')
-   } else {
-     res.redirect(`/campgrounds/${req.params.id}`)
-   }
- })
-})
+router.put("/:id", function(req, res){
+  geocoder.geocode(req.body.location, function (err, data) {
+    var lat = data.results[0].geometry.location.lat;
+    var lng = data.results[0].geometry.location.lng;
+    var location = data.results[0].formatted_address;
+    var newData = {name: req.body.name, image: req.body.image, description: req.body.description, cost: req.body.cost, location: location, lat: lat, lng: lng};
+    Campground.findByIdAndUpdate(req.params.id, {$set: newData}, function(err, campground){
+        if(err){
+            req.flash("error", err.message);
+            res.redirect("back");
+        } else {
+            req.flash("success","Successfully Updated!");
+            res.redirect("/campgrounds/" + campground._id);
+        }
+    });
+  });
+});
 
 //Delete Campground Route
-router.delete('/:id/', middleWare.checkCampgroundOwnership, (req, res) => {
+router.delete('/:id/', middleware.checkCampgroundOwnership, (req, res) => {
   Campground.findByIdAndRemove(req.params.id, (err, foundCampground) => {
     if(err){
       res.redirect('/campgrounds')
