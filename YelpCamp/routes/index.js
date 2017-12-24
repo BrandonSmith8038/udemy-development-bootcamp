@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const passport = require('passport');
-
+const Campground = require('../models/campground')
 const User = require('../models/user');
 //========================================
 //Middleware
@@ -25,7 +25,8 @@ router.post('/register', (req, res) => {
     username: req.body.username,
     firstName: req.body.firstName,
     lastName: req.body.lastName,
-    email: req.body.email
+    email: req.body.email,
+    avatar: req.body.avatar
   });
   if(req.body.adminCode === 'secretcode123'){
     newUser.isAdmin = true
@@ -71,9 +72,14 @@ router.get('/users/:id', (req, res) => {
     if(err){
       req.flash('error', 'User Not Found')
       res.redirect('/')
-    } else {
-      res.render('users/show', {user: foundUser})
-    }
+    } 
+      Campground.find().where('author.id').equals(foundUser._id).exec((err, campgrounds) => {
+        if(err){
+      req.flash('error', 'No Campgrounds Found')
+      res.redirect('/')
+      } 
+      res.render('users/show', {user: foundUser, campgrounds: campgrounds})
+      })
   })
 })
 

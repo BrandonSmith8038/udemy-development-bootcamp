@@ -1,3 +1,22 @@
 <%- include('../partials/header') %>
-<h1><%= user.firstName %> <%= user.lastName %></h1>
+    <div class="row">
+        <div class="col-md-4">
+            <h1 class='text-capitalize'><%= user.firstName + " " + user.lastName%></h1>
+            <div class="thumbnail">
+                <img src='<%= user.avatar %>' class='img-responsive img-rounded'>
+                <div class="caption text-uppercase text-center"><%= user.email %></div>
+            </div>
+                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Impedit perferendis doloremque dignissimos, modi molestiae laboriosam ipsam consequuntur ratione aspernatur quos quis earum eligendi odit, quisquam fugiat est, in quidem harum.</p>
+                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ipsam laborum blanditiis explicabo beatae, dolorum, temporibus inventore dolore, ab libero eius at optio. Nisi officiis ut nemo. Velit explicabo, cumque eligendi.</p>
+        </div>
+        <div class="col-md-8">
+            <h3><%= user.firstName %>'s Campgrounds</h3>
+            <ul>
+                <% campgrounds.forEach((campground) => { %>
+                    <li><a href='/campgrounds/<%= campground.id %>'><%= campground.name %></a></li>
+                <% }) %>
+           </ul>
+        </div>
+    </div>
+    
 <%- include('../partials/footer') %>
