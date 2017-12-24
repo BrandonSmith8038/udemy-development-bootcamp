@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const passport = require('passport');
+
 const User = require('../models/user');
 //========================================
 //Middleware
@@ -20,7 +21,12 @@ router.get('/register', (req, res) => {
 });
 //Handle Sign Up Logic
 router.post('/register', (req, res) => {
-  const newUser = new User({ username: req.body.username });
+  const newUser = new User({
+    username: req.body.username,
+    firstName: req.body.firstName,
+    lastName: req.body.lastName,
+    email: req.body.email
+  });
   if(req.body.adminCode === 'secretcode123'){
     newUser.isAdmin = true
   }
@@ -58,6 +64,18 @@ router.get('/logout', (req, res) => {
   req.flash("success", 'Logged You Out!')
   res.redirect('/campgrounds');
 });
+
+//User Profiles
+router.get('/users/:id', (req, res) => {
+  User.findById(req.params.id, (err, foundUser) => {
+    if(err){
+      req.flash('error', 'User Not Found')
+      res.redirect('/')
+    } else {
+      res.render('users/show', {user: foundUser})
+    }
+  })
+})
 
 const isLoggedIn = (req, res, next) => {
   if (req.isAuthenticated()) {
