@@ -18,6 +18,8 @@ const seedDB = require('./seeds');
 
 const app = express();
 
+require('dotenv').config()
+
 app.set('view engine', 'ejs');
 
 app.use(express.static(__dirname + '/public'));
