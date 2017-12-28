@@ -76,13 +76,13 @@ router.get('/forgot', (req, res) => {
 
 router.post('/forgot', (req, res) => {
   async.waterfall([
-    function(done) {
+    done => {
       crypto.randomBytes(20, (err, buf) => {
         const token = buf.toString('hex')
         done(err, token)
       })
     },
-    function(token, done){
+    (token, done) => {
       User.findOne({email: req.body.email}, (err, user) => {
         if(!user){
           req.flash('error', 'No account with that email address exists.')
@@ -96,7 +96,7 @@ router.post('/forgot', (req, res) => {
         })
       })
     },
-    function(token, user, done){
+    (token, user, done) => {
       
       const options = {
           auth: {
@@ -116,6 +116,7 @@ router.post('/forgot', (req, res) => {
       mailer.sendMail(mailOptions, (err) => {
         console.log('Mail Sent')
         req.flash('success', `An email has been sent to ${user.email} with further instructions`)
+        res.redirect('/campgrounds')
         done(err, 'done')
       })
     }
@@ -125,6 +126,68 @@ router.post('/forgot', (req, res) => {
     res.redirect('/forgot')
     }
   })
+})
+
+router.get('/reset/:token', (req, res) => {
+  User.findOne({resetPasswordToken: req.params.token, resetPasswordExpires: {$gt: Date.now() } }, (err, user) => {
+    if(!user){
+      req.flash('error', 'Password reset token is invalid or has expired.')
+      return res.redirect('/forgot')
+    }
+    res.render('reset', {token: req.params.token})
+  })
+})
+
+router.post('/reset/:token', (req, res) => {
+  async.waterfall([
+    done => {
+      User.findOne({ resetPasswordToken: req.params.token, resetPasswordExpires: {$gt: Date.now() } }, (err, user) => {
+        if(!user){
+          req.flash('error', 'Password reset token is invalid or has expired.')
+          return res.redirect('/forgot')
+        }
+        if(req.body.password === req.body.confirm){
+          user.setPassword(req.body.password, (err) => {
+            user.resetPasswordToken = undefined;
+            user.resetPasswordExpires = undefined;
+            
+            user.save((err) => {
+              req.logIn(user, (err) => {
+                done(err, user)
+              })
+            })
+          })
+        } else {
+          req.flash('error', 'Passwords do not match')
+          return(res.redirect('back'))
+        }
+      })
+    },
+    (user, done) => {
+      const options = {
+          auth: {
+            api_user: 'RedDirtWD',
+            api_key: process.env.SENDGRIDPW
+        }
+      }
+      
+      const mailer = nodemailer.createTransport(sgTransport(options));
+      
+      const mailOptions = {
+        to: user.email,
+        from: 'cowboy8038@gmail.com',
+        subject: 'Your Password Has Been Reset',
+        text: `This is a confirmation that the password for your account ${user.email} has just been changed`
+      }
+      mailer.sendMail(mailOptions, (err) => {
+        console.log('Mail Sent')
+        req.flash('success', `Success! Your password has been changed`)
+        done(err)
+      })
+    }
+    ], err => {
+      res.redirect('/campgrounds')
+    })
 })
 
 //User Profiles
